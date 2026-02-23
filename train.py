@@ -35,7 +35,7 @@ def main() -> None:
     model_path = os.path.join("artifacts", "model.pkl")
     metrics_path = os.path.join("artifacts", "metrics.json")
 
-    joblib.dump(model, model_path)
+    #joblib.dump(model, model_path)
 
     metrics = {"accuracy": float(acc)}
     with open(metrics_path, "w", encoding="utf-8") as f:
