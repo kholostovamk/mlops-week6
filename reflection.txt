@@ -1,0 +1,34 @@
+# Week 6 CI/CD Reflection
+
+Lab focus for this week was building a CI/CD workflow that actually makes sense 
+for machine learning. I kept the model 
+intentionally small so the pipeline could run fast, but I still built it around 
+the same lifecycle a real ML project has.
+
+Project code trains a simple classifier on the Iris dataset and saves a model 
+artifact to `artifacts/model.pkl`. Evaluation runs on a held-out split and 
+writes metrics to `artifacts/eval.json`. After that, `check_performance.py` 
+enforces a minimum accuracy threshold. GitHub Actions runs all of this 
+automatically on every push to `main`: install dependencies, run `pytest`, 
+train, evaluate, run the performance gate, and then upload the `artifacts/` 
+folder as an Actions artifact.
+
+Testing the pipeline was the main point. For the CI exercise, I intentionally
+forced a unit test to fail so the workflow would stop at the `pytest` stage. 
+After pushing that change, Actions showed a failed run, which confirmed 
+the pipeline catches code-level issues. I then restored the test and pushed 
+again, and the workflow returned to a passing state.
+
+For the threshold check, I temporarily raised the accuracy threshold in 
+`check_performance.py` above what the model could reach. The workflow failed at
+ the performance gate step, which is exactly the behavior I wanted, because it 
+ proves the pipeline blocks underperforming models from moving forward. After 
+ reverting the threshold back to the normal value, the workflow passed again.
+
+Minimal deployment in this lab is handled by uploading the trained model and 
+metrics as a build artifact after a successful run. That step makes the output 
+available in a consistent place and acts like a lightweight “staging” mechanism.
+
+Overall, biggest takeaway is that ML CI/CD needs two kinds of protection at the
+same time: software correctness (tests) and model quality (threshold checks). 
+automating both makes the process reproducible and prevents quiet regressions.
