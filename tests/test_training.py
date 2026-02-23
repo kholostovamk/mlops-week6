@@ -15,7 +15,7 @@ def test_training_script_runs():
         text=True
     )
     assert result.returncode == 0, f"Training failed:\n{result.stderr}"
-    assert False, "Intentional unit test failure for CI demonstration"
+    assert os.path.exists("artifacts/model.pkl"), "model.pkl was not created"
 
 
 def test_evaluation_script_runs():
