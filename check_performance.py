@@ -4,7 +4,7 @@ import sys
 
 
 def main() -> None:
-    threshold = 0.90  # minimum acceptable accuracy here
+    threshold = 0.99  # minimum acceptable accuracy here
 
     eval_path = os.path.join("artifacts", "eval.json")
     if not os.path.exists(eval_path):
